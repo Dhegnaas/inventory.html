@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inventory Manager</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+  <div class="bg-white shadow-md rounded-xl p-6 w-full max-w-2xl">
+    <h1 class="text-2xl font-bold text-center text-blue-600 mb-6">📦 Inventory Manager</h1>
+
+    <!-- Input Form -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+      <input id="itemName" type="text" placeholder="Item Name"
+             class="border p-2 rounded w-full focus:ring-2 focus:ring-blue-400" />
+      <input id="itemQty" type="number" placeholder="Quantity"
+             class="border p-2 rounded w-full focus:ring-2 focus:ring-blue-400" />
+      <input id="itemPrice" type="number" placeholder="Price ($)"
+             class="border p-2 rounded w-full focus:ring-2 focus:ring-blue-400" />
+    </div>
+    <button onclick="addItem()"
+            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full mb-6">
+      ➕ Add Item
+    </button>
+
+    <!-- Table -->
+    <div class="overflow-x-auto">
+      <table class="min-w-full table-auto">
+        <thead class="bg-gray-200">
+          <tr>
+            <th class="px-4 py-2 text-left">Item</th>
+            <th class="px-4 py-2 text-left">Qty</th>
+            <th class="px-4 py-2 text-left">Price ($)</th>
+            <th class="px-4 py-2 text-left">Total ($)</th>
+            <th class="px-4 py-2"></th>
+          </tr>
+        </thead>
+        <tbody id="inventoryList" class="divide-y divide-gray-100">
+          <!-- Items will appear here -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Total -->
+    <div class="text-right font-bold text-xl mt-6 text-gray-700">
+      Total Inventory Value: $<span id="totalValue">0.00</span>
+    </div>
+  </div>
+
+  <script>
+    const inventory = [];
+
+    function addItem() {
+      const name = document.getElementById("itemName").value.trim();
+      const qty = parseInt(document.getElementById("itemQty").value);
+      const price = parseFloat(document.getElementById("itemPrice").value);
+
+      if (!name || qty <= 0 || price <= 0) {
+        alert("Please enter valid item details.");
+        return;
+      }
+
+      inventory.push({ name, qty, price });
+      renderInventory();
+      clearInputs();
+    }
+
+    function deleteItem(index) {
+      inventory.splice(index, 1);
+      renderInventory();
+    }
+
+    function renderInventory() {
+      const tableBody = document.getElementById("inventoryList");
+      tableBody.innerHTML = "";
+      let total = 0;
+
+      inventory.forEach((item, index) => {
+        const row = document.createElement("tr");
+
+        const totalItem = item.qty * item.price;
+        total += totalItem;
+
+        row.innerHTML = `
+          <td class="px-4 py-2">${item.name}</td>
+          <td class="px-4 py-2">${item.qty}</td>
+          <td class="px-4 py-2">$${item.price.toFixed(2)}</td>
+          <td class="px-4 py-2">$${totalItem.toFixed(2)}</td>
+          <td class="px-4 py-2 text-right">
+            <button onclick="deleteItem(${index})" class="text-red-500 hover:text-red-700">🗑</button>
+          </td>
+        `;
+
+        tableBody.appendChild(row);
+      });
+
+      document.getElementById("totalValue").textContent = total.toFixed(2);
+    }
+
+    function clearInputs() {
+      document.getElementById("itemName").value = "";
+      document.getElementById("itemQty").value = "";
+      document.getElementById("itemPrice").value = "";
+    }
+  </script>
+</body>
+</html>
+
+</body>
+</html>
